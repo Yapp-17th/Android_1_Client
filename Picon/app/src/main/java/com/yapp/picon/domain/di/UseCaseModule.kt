@@ -61,4 +61,7 @@ val useCaseModule = module {
     single {
         GetStatisticUseCase(get(), get())
     }
+    single {
+        UpdatePostUseCase(get(), get())
+    }
 }

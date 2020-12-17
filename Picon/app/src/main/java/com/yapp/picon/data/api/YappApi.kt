@@ -32,6 +32,13 @@ interface YappApi {
         @Body postRequest: PostRequest
     ): PostResponse
 
+    @POST("/display/post/{id}")
+    suspend fun updatePost(
+        @Header("AccessToken") accessToken: String,
+        @Path("id") id: Int,
+        @Body postRequest: PostRequest
+    ): PostResponse
+
     @Headers("Content-Type: application/json;charset=UTF-8")
     @GET("display/post/")
     suspend fun requestPosts(

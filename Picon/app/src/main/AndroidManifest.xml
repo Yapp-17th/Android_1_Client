@@ -47,6 +47,7 @@
         <activity android:name=".presentation.pingallery.PinGalleryActivity" />
         <activity android:name=".presentation.collect.CollectActivity" />
         <activity android:name=".presentation.profile.FriendProfileActivity" />
+        <activity android:name=".presentation.postedit.EditPostActivity" />
     </application>
 
 </manifest>

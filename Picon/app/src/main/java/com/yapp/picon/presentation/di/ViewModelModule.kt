@@ -7,6 +7,7 @@ import com.yapp.picon.presentation.nav.NavViewModel
 import com.yapp.picon.presentation.nav.UserInfoViewModel
 import com.yapp.picon.presentation.nav.manageFriend.ManageFriendViewModel
 import com.yapp.picon.presentation.pingallery.PinGalleryViewModel
+import com.yapp.picon.presentation.postedit.EditPostViewModel
 import com.yapp.picon.presentation.post.PostViewModel
 import com.yapp.picon.presentation.postdetail.PostDetailViewModel
 import com.yapp.picon.presentation.profile.FriendProfileViewModel
@@ -32,4 +33,5 @@ val viewModelModule = module {
     viewModel { ManageFriendViewModel() }
     viewModel { NavViewModel(get(), get(), get()) }
     viewModel { FriendProfileViewModel(get()) }
+    viewModel { EditPostViewModel(get(), get()) }
 }

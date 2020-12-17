@@ -22,18 +22,47 @@ import com.yapp.picon.presentation.base.BaseActivity
 import com.yapp.picon.presentation.model.Emotion
 import com.yapp.picon.presentation.model.Post
 import com.yapp.picon.presentation.nav.repository.EmotionDatabaseRepository
+import com.yapp.picon.presentation.postedit.EditPostActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PostDetailActivity: BaseActivity<PostDetailActivityBinding, PostDetailViewModel>(
     R.layout.post_detail_activity
 ) {
+    companion object {
+        const val DELETE_PIN: Int = 400
+        const val SAVE_PIN: Int = 300
+    }
+
     private lateinit var imagePagerAdapter: ImagePagerAdapter
     private lateinit var emotionDatabaseRepository: EmotionDatabaseRepository
     private lateinit var removeDialog: Dialog
     private lateinit var removeBuilder: AlertDialog.Builder
+    private var post: Post? = null
     private var totalImage = 0
     private var id = -1
     private var emotionColor = ""
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100) {
+            if (resultCode == DELETE_PIN) finish()
+            else if (resultCode == SAVE_PIN) {
+                data?.let {
+                    it.getParcelableExtra<Post>("resultPost")?.let { rPost ->
+                        post = rPost
+                        totalImage = rPost.imageUrls?.size ?: 0
+                        id = rPost.id ?: -1
+
+                        setViewModel(rPost)
+                        emotionColor = rPost.emotion?.name ?: ""
+                        setEmotionCircleImage(rPost.emotion?.name ?: "")
+                        setBackgroundColor(rPost.emotion?.name ?: "")
+                    }
+                }
+            }
+        }
+    }
 
     override val vm: PostDetailViewModel by viewModel()
 
@@ -56,8 +85,8 @@ class PostDetailActivity: BaseActivity<PostDetailActivityBinding, PostDetailView
         })
         vm.editButtonFlag.observe(this, {
             if (it) {
-                // todo - 편집 화면 띄우기
                 vm.clickEditIcon(binding.postDetailEditIconButton)
+                startEditPostActivity()
             }
         })
         vm.removeButtonFlag.observe(this, {
@@ -106,6 +135,19 @@ class PostDetailActivity: BaseActivity<PostDetailActivityBinding, PostDetailView
         vm.initFlag()
     }
 
+    private fun startEditPostActivity() {
+        post?.let {
+            Intent(this, EditPostActivity::class.java).apply {
+                putExtra("post", it)
+            }.let { startActivityForResult(it, 100) }
+        } ?: showToast("게시물이 존재하지 않습니다.")
+
+        /** Warning
+        원래 편집 화면을 띄우고 다시 돌아오는 과정에서 게시물 내용이 갱신되도록 해야 하는데,
+        서버에 게시글 조회 요청할 때, id로 조회하는 게 없어서 갱신이 불가합니다.
+        */
+    }
+
     private fun setImagePager() {
         imagePagerAdapter = ImagePagerAdapter(this) { img ->
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
@@ -131,13 +173,13 @@ class PostDetailActivity: BaseActivity<PostDetailActivityBinding, PostDetailView
     }
 
     private fun getPostFromIntent() {
-        val post = intent.getParcelableExtra<Post>("post")
+        post = intent.getParcelableExtra<Post>("post")
         post?.let {
             totalImage = it.imageUrls?.size ?: 0
             id = it.id ?: -1
 
             setViewModel(it)
-            emotionColor = post.emotion?.name ?: ""
+            emotionColor = it.emotion?.name ?: ""
             setEmotionCircleImage(it.emotion?.name ?: "")
             setBackgroundColor(it.emotion?.name ?: "")
         }
@@ -145,7 +187,7 @@ class PostDetailActivity: BaseActivity<PostDetailActivityBinding, PostDetailView
 
     private fun setViewModel(post: Post) {
         val dateList = post.createdDate?.split('.')
-            ?: throw Exception("PostDetailActivity - setViewModel - createdDate is null")
+            ?: listOf("2020", "00", "00")
 
         vm.setImageList(post.imageUrls ?: listOf())
         vm.setImageNumber(1, totalImage)

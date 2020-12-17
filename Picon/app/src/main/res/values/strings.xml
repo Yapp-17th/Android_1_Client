@@ -89,4 +89,6 @@
     <string name="join_membership">회원가입</string>
     <string name="pin_gallery">핀 갤러리</string>
     <string name="collecting">모아보기</string>
+    <string name="memo">메모</string>
+    <string name="remove_pin">핀 삭제</string>
 </resources>
