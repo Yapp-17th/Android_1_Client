@@ -8,6 +8,7 @@
     <string name="map_menu_view_travel_statistic">여행통계 보기</string>
     <string name="map_menu_setting">설정</string>
     <string name="map_post_form_info">지도를 움직여 위치를 설정해주세요</string>
+    <string name="map_shared_button">현재 지도 공유하기</string>
 
     <string name="my_profile_follower">팔로워</string>
     <string name="my_profile_following">팔로잉</string>
@@ -68,7 +69,7 @@
     <string name="intro_fragment_2_title">다섯가지 색상 핀</string>
     <string name="intro_fragment_2_sub">색상의 이름을 원하는 감정으로 설정하고\n나만의 지도를 커스텀해보세요!</string>
     <string name="intro_fragment_3_title">PiCON의 100% 활용법</string>
-    <string name="intro_fragment_3_sub">사진을 필터링해서 모아보고\n나만의 여행지도를 공유해보세요.</string>
+    <string name="intro_fragment_3_sub">사진을 필터링해서 모아보고\n나만의 여행지도를 공유해보세요.</string>도
 
     <string name="X">X</string>
     <string name="follow">팔로우</string>

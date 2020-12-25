@@ -58,8 +58,7 @@ class SettingFragment: BaseFragment<NavSettingFragmentBinding, NavViewModel>(
     private fun setReviewButton() {
         repo.reviewFlag.observe(this, {
             if (it) {
-                // TODO("앱 배포 이후에 아래 주석을 해제하면 됩니다.")
-                // startAppStore()
+                 startAppStore()
             }
         })
     }

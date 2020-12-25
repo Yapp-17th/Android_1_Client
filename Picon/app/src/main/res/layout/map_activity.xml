@@ -16,6 +16,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/map_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,7 +32,9 @@
                 <FrameLayout
                     android:id="@+id/map_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
+
+                </FrameLayout>
 
             </FrameLayout>
 
@@ -45,7 +48,7 @@
 
                 <ImageButton
                     android:id="@+id/map_ib_menu"
-                    visibleOrInvisible="@{mapVM.showBtnYN}"
+                    visibleOrInvisible="@{mapVM.showBtnYN &amp;&amp; !mapVM.sharedMapYN}"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@android:color/transparent"
@@ -57,7 +60,7 @@
 
             <ImageButton
                 android:id="@+id/map_ib_pin_close"
-                visibleOrInvisible="@{mapVM.showPinYN &amp;&amp; !mapVM.showBtnYN}"
+                visibleOrInvisible="@{mapVM.showPinYN &amp;&amp; !mapVM.showBtnYN &amp;&amp; !mapVM.sharedMapYN}"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@android:color/transparent"
@@ -70,7 +73,7 @@
 
             <ImageButton
                 android:id="@+id/map_ib_search"
-                visibleOrInvisible="@{mapVM.showPinYN || mapVM.showBtnYN}"
+                visibleOrInvisible="@{mapVM.showPinYN || mapVM.showBtnYN || mapVM.sharedMapYN}"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@android:color/transparent"
@@ -83,20 +86,21 @@
 
             <ImageButton
                 android:id="@+id/map_ib_current_location"
-                visibleOrInvisible="@{mapVM.showBtnYN &amp;&amp; !mapVM.showPinYN}"
+                visibleOrInvisible="@{(mapVM.showBtnYN &amp;&amp; !mapVM.showPinYN) || mapVM.sharedMapYN}"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="3dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/image_description"
                 android:padding="18dp"
                 android:src="@drawable/ic_map_location"
                 app:layout_constraintBottom_toTopOf="@id/map_ib_add"
-                app:layout_constraintEnd_toEndOf="@id/map_ib_add"
-                app:layout_constraintStart_toStartOf="@id/map_ib_add" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageButton
                 android:id="@+id/map_ib_add"
-                visibleOrInvisible="@{mapVM.showBtnYN &amp;&amp; !mapVM.showPinYN}"
+                visibleOrGone="@{(mapVM.showBtnYN &amp;&amp; !mapVM.showPinYN &amp;&amp; !mapVM.sharedMapYN)}"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
                 android:layout_marginEnd="18dp"
@@ -150,6 +154,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/map_ib_post_pin" />
+
+            <Button
+                android:id="@+id/map_shared_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/bg_cornflower_blue_radius_22dp"
+                android:drawableStart="@drawable/ic_share"
+                android:drawablePadding="12dp"
+                android:includeFontPadding="false"
+                android:minHeight="45dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:text="@string/map_shared_button"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

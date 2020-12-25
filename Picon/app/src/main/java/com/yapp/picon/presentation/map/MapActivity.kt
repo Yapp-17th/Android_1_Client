@@ -2,16 +2,22 @@ package com.yapp.picon.presentation.map
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.MenuItem
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import com.jraska.falcon.Falcon
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.geometry.Tm128
@@ -45,6 +51,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ted.gun0912.clustering.naver.TedNaverClustering
+import java.io.File
 
 class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
     R.layout.map_activity,
@@ -83,6 +90,7 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
         super.onResume()
 
         setNavHeader()
+        setSharedButton()
     }
 
     override fun initViewModel() {
@@ -99,6 +107,34 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
                 vm.completeLoadPost()
             }
         })
+
+        vm.sharedMapYN.observe(this) {
+            if (it) {
+                val locationLayoutParams = ConstraintLayout.LayoutParams(
+                    dpToPx(this, 60f).toInt(),
+                    dpToPx(this, 60f).toInt()
+                )
+                locationLayoutParams.setMargins(0,0,18,0)
+                locationLayoutParams.endToEnd = R.id.map_constraint_layout
+                locationLayoutParams.topToTop = R.id.map_shared_button
+                locationLayoutParams.bottomToBottom = R.id.map_shared_button
+                binding.mapIbCurrentLocation.layoutParams = locationLayoutParams
+
+                binding.mapSharedButton.visibility = View.VISIBLE
+                binding.mapDrawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                val locationLayoutParams = ConstraintLayout.LayoutParams(
+                    dpToPx(this, 60f).toInt(),
+                    dpToPx(this, 60f).toInt()
+                )
+                locationLayoutParams.startToStart = R.id.map_ib_add
+                locationLayoutParams.endToEnd = R.id.map_ib_add
+                locationLayoutParams.bottomToTop = R.id.map_ib_add
+                binding.mapIbCurrentLocation.layoutParams = locationLayoutParams
+
+                binding.mapSharedButton.visibility = View.GONE
+            }
+        }
     }
 
     private fun setToolBar() {
@@ -135,12 +171,57 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
         }
     }
 
+    private fun setSharedButton() {
+        binding.mapSharedButton.setOnClickListener {
+            vm.setToggleShowBtnYN(false)
+            vm.setSharedMenuButton(false)
+
+            saveBitmapToJPEG()
+            getBitmapFromFile()?.let { imageFile ->
+                shareTheScreenShot(imageFile)
+            }
+        }
+    }
+
+    private fun saveBitmapToJPEG() {
+        val storage: File = cacheDir
+        val fileName = "capture.jpg"
+
+        val tempFile = File(storage, fileName) // 저장할 파일 인스턴스 생성
+
+        Falcon.takeScreenshot(this, tempFile) // 스크린샷 파일 저장
+    }
+
+    private fun getBitmapFromFile(): File? {
+        val files = File(cacheDir.toString()).listFiles()
+
+        files?.let { list ->
+            for (file in list) {
+                if (file.name == "capture.jpg") return file
+            }
+        }
+        return null
+    }
+
+    private fun shareTheScreenShot(file: File) {
+        /* todo - 사진파일 공유하는 기능 띄우기
+            아래처럼 구현했었는데 오류가 나는 것 같아요.
+            혹시 몰라서 주석으로 처리해둔 거라 지우셔도 괜찮습니다.
+        */
+//        val imageUri = Uri.fromFile(file)
+//        Intent(Intent.ACTION_SEND).apply {
+//            type = "image/*"
+//            putExtra(Intent.EXTRA_STREAM, imageUri)
+//        }.let { sharingIntent ->
+//            startActivity(Intent.createChooser(sharingIntent, "Share The ScreenShot"))
+//        }
+    }
+
     private fun setNavHeader() {
         observeUserToken()
 
         setUserCircleImage()
         setUserNameText()
-        setAlarmImageEvent()
         setEmotionActivityStart()
         setHeadEmotionAdapter()
     }
@@ -177,11 +258,6 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
         vm.profileNickname.observe(this, {
             binding.navView.getHeaderView(0).nav_head_user_name_text.text = it
         })
-    }
-
-    private fun setAlarmImageEvent() {
-        // todo - 알람 아이콘 맞는 걸로 변경
-        // todo - 알람 아이콘 기능 설정
     }
 
     private fun setEmotionActivityStart() {
@@ -289,17 +365,18 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.map_nav_collect_picture -> startCollectActivity()
             R.id.map_nav_manage_friend -> startActivity(
                 Intent(
                     this,
                     ManageFriendActivity::class.java
                 )
             )
-            R.id.map_nav_setting -> startNavActivity(NavTypeStringSet.Setting.type)
             R.id.map_nav_view_travel_statistic -> startNavActivity(NavTypeStringSet.Statistic.type)
-            R.id.map_nav_collect_picture -> startCollectActivity()
+            R.id.map_nav_share_map -> vm.setSharedMenuButton(true)
+            R.id.map_nav_setting -> startNavActivity(NavTypeStringSet.Setting.type)
         }
-        return true
+        return false
     }
 
     private fun settingOptionToMap() {
@@ -398,6 +475,10 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
             binding.mapDrawerLayout.closeDrawer(GravityCompat.START)
             return
         }
+        if (binding.mapSharedButton.visibility == View.VISIBLE) {
+            vm.setSharedMenuButton(false)
+            return
+        }
         vm.showPinYN.value?.let {
             if (it) {
                 vm.toggleShowPinYN()
@@ -467,6 +548,12 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
             naverMap.cameraPosition.zoom
         ).animate(CameraAnimation.Fly, NaverCamera.REFRESH_ANIMATION_TIME)
         naverMap.moveCamera(cameraUpdate)
+    }
+
+    private fun dpToPx(context: Context, dp: Float): Float {
+        val displayMetrics = context.resources.displayMetrics
+
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics)
     }
 
 }
