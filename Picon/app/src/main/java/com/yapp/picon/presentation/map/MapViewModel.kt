@@ -43,6 +43,9 @@ class MapViewModel(
     private val _showPinYN = MutableLiveData<Boolean>()
     val showPinYN: LiveData<Boolean> get() = _showPinYN
 
+    private val _sharedMapYN = MutableLiveData<Boolean>()
+    val sharedMapYN: LiveData<Boolean> get() = _sharedMapYN
+
     private val _postMarkers = MutableLiveData<List<PostMarker>>()
     val postMarkers: LiveData<List<PostMarker>> get() = _postMarkers
 
@@ -66,6 +69,7 @@ class MapViewModel(
     init {
         _showBtnYN.value = false
         _showPinYN.value = false
+        _sharedMapYN.value = false
         _postMarkers.value = mutableListOf()
         _postLoadYN.value = false
         _showAddressYN.value = false
@@ -76,6 +80,10 @@ class MapViewModel(
 
     private fun showToast(msg: String) {
         _toastMsg.value = msg
+    }
+
+    fun setToggleShowBtnYN(value: Boolean) {
+        _showBtnYN.value = value
     }
 
     fun toggleShowBtnYN() {
@@ -280,5 +288,9 @@ class MapViewModel(
                 address.value = ""
             }
         }
+    }
+
+    fun setSharedMenuButton(value: Boolean) {
+        _sharedMapYN.value = value
     }
 }
