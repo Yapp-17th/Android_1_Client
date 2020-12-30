@@ -92,4 +92,5 @@
     <string name="collecting">모아보기</string>
     <string name="memo">메모</string>
     <string name="remove_pin">핀 삭제</string>
+    <string name="update_plan_guide_text">차후 업데이트 예정입니다.</string>
 </resources>
