@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,101 +10,122 @@
             type="com.yapp.picon.presentation.simplejoin.SimpleJoinViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/dark_grey"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center_horizontal"
-            android:lineSpacingExtra="4sp"
-            android:textColor="@color/very_light_pink"
-            android:textSize="16sp"
-            android:textStyle="normal"
-            tools:text="간편 로그인" />
-
-        <EditText
-            android:id="@+id/simple_join_et_id"
-            android:layout_width="300dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="44dp"
-            android:background="@drawable/bg_login_form"
-            android:hint="@string/simple_join_input_id"
-            android:inputType="textEmailAddress"
-            android:letterSpacing="-0.02"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="@={simpleJoinVM.id}"
-            android:textColor="@color/pale_grey"
-            android:textColorHint="@color/brown_grey_two"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/simple_join_et_pw"
-            android:layout_width="300dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/bg_login_form"
-            android:hint="@string/simple_join_input_pw"
-            android:inputType="textPassword"
-            android:letterSpacing="-0.02"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="@={simpleJoinVM.pw}"
-            android:textColor="@color/pale_grey"
-            android:textColorHint="@color/brown_grey_two"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/simple_join_et_pw_re"
-            android:layout_width="300dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/bg_login_form"
-            android:hint="@string/simple_join_input_pw_re"
-            android:inputType="textPassword"
-            android:letterSpacing="-0.02"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="@={simpleJoinVM.pwRe}"
-            android:textColor="@color/pale_grey"
-            android:textColorHint="@color/brown_grey_two"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/simple_join_et_nic"
-            android:layout_width="300dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="48dp"
-            android:background="@drawable/bg_login_form"
-            android:hint="@string/simple_join_input_nic"
-            android:inputType="text"
-            android:letterSpacing="-0.02"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="@={simpleJoinVM.nic}"
-            android:textColor="@color/pale_grey"
-            android:textColorHint="@color/brown_grey_two"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/simple_join_btn_join"
-            android:layout_width="300dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="170dp"
-            android:background="@drawable/bg_cornflower_radius_5dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark_grey"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
-            android:letterSpacing="-0.02"
-            android:text="@string/join_membership"
-            android:textColor="@color/pale_grey"
-            android:textSize="15sp" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="4sp"
+                android:textColor="@color/very_light_pink"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                tools:text="간편 로그인" />
+
+            <EditText
+                android:id="@+id/simple_join_et_id"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="44dp"
+                android:background="@drawable/bg_login_form"
+                android:hint="@string/simple_join_input_id"
+                android:inputType="textEmailAddress"
+                android:letterSpacing="-0.02"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@={simpleJoinVM.id}"
+                android:textColor="@color/pale_grey"
+                android:textColorHint="@color/brown_grey_two"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/simple_join_et_pw"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/bg_login_form"
+                android:hint="@string/simple_join_input_pw"
+                android:inputType="textPassword"
+                android:letterSpacing="-0.02"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@={simpleJoinVM.pw}"
+                android:textColor="@color/pale_grey"
+                android:textColorHint="@color/brown_grey_two"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/simple_join_et_pw_re"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/bg_login_form"
+                android:hint="@string/simple_join_input_pw_re"
+                android:inputType="textPassword"
+                android:letterSpacing="-0.02"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@={simpleJoinVM.pwRe}"
+                android:textColor="@color/pale_grey"
+                android:textColorHint="@color/brown_grey_two"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/simple_join_et_nic"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/bg_login_form"
+                android:hint="@string/simple_join_input_nic"
+                android:inputType="text"
+                android:letterSpacing="-0.02"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@={simpleJoinVM.nic}"
+                android:textColor="@color/pale_grey"
+                android:textColorHint="@color/brown_grey_two"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/simple_join_btn_join"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="170dp"
+                android:background="@drawable/bg_cornflower_radius_5dp"
+                android:gravity="center"
+                android:letterSpacing="-0.02"
+                android:text="@string/join_membership"
+                android:textColor="@color/pale_grey"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/simple_join_progress_bar"
+            style="?android:attr/progressBarStyleSmallInverse"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

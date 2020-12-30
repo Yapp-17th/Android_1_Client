@@ -3,6 +3,8 @@ package com.yapp.picon.presentation.simplejoin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import androidx.lifecycle.Observer
 import com.yapp.picon.BR
 import com.yapp.picon.R
@@ -23,7 +25,26 @@ class SimpleJoinActivity : BaseActivity<SimpleJoinActivityBinding, SimpleJoinVie
     }
 
     private fun setListeners() {
-        binding.simpleJoinBtnJoin.setOnClickListener { vm.joinMembership() }
+        binding.simpleJoinBtnJoin.setOnClickListener { joinMembership() }
+    }
+
+    private fun joinMembership() {
+        startLoading()
+        vm.joinMembership()
+        stopLoading()
+    }
+
+    private fun startLoading() {
+        binding.simpleJoinProgressBar.visibility = View.VISIBLE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
+    }
+
+    private fun stopLoading() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        binding.simpleJoinProgressBar.visibility = View.GONE
     }
 
     override fun initViewModel() {
