@@ -34,25 +34,34 @@ class SplashViewModel(
     fun check() {
         viewModelScope.launch {
             loadFirstUseCase().let {
-                Log.e("aa12", "loadFirstUseCase : $it")
+                Log.e(TAG, "loadFirstUseCase : $it")
                 _firstYN.value = it
             }
 
-            loadAccessTokenUseCase().let {
-                Log.e("aa12", "loadAccessTokenUseCase : $it")
-                _loginYN.value = it.isNotEmpty()
+            // AccessToken 이 있지만 인증이 안될 경우 try catch 로 처리합니다.
+            try {
+                loadAccessTokenUseCase().let {
+                    Log.e(TAG, "loadAccessTokenUseCase : $it")
+                    _loginYN.value = it.isNotEmpty()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loadAccessTokenUseCase : ${e.message}")
+                return@launch
             }
 
-            Log.e("aa12", "_checkYN CHANGE")
+            Log.e(TAG, "_checkYN CHANGE")
             _checkYN.value = true
         }
     }
 
     fun saveFirstYN(firstYN: Boolean) {
         viewModelScope.launch {
-            Log.e("aa12", "saveFirstYN")
+            Log.e(TAG, "saveFirstYN")
             saveFirstUseCase(firstYN)
         }
     }
 
+    companion object {
+        private const val TAG = "SplashViewModel"
+    }
 }
