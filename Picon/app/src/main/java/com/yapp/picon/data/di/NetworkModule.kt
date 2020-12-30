@@ -6,6 +6,7 @@ import org.koin.dsl.module
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 val networkModule = module {
     factory { (baseUrl: String) ->
@@ -22,6 +23,9 @@ val networkModule = module {
 
     single {
         OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addNetworkInterceptor(
                 HttpLoggingInterceptor().also {
                     it.level = HttpLoggingInterceptor.Level.BODY
