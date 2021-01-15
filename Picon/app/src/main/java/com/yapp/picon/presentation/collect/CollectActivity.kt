@@ -2,6 +2,7 @@ package com.yapp.picon.presentation.collect
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.yapp.picon.BR
@@ -11,6 +12,7 @@ import com.yapp.picon.databinding.CollectItemBinding
 import com.yapp.picon.presentation.base.BaseActivity
 import com.yapp.picon.presentation.model.Pin
 import com.yapp.picon.presentation.model.Post
+import com.yapp.picon.presentation.nav.repository.EmotionDatabaseRepository
 import com.yapp.picon.presentation.postdetail.PostDetailActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +29,8 @@ class CollectActivity : BaseActivity<CollectActivityBinding, CollectViewModel>(
                 BR.collectItem,
                 { item: Pin -> itemClicked(item) }
             ) {}
+
+    private val collectBottomSheetDialog = CollectBottomSheetDialog()
 
     private fun itemClicked(item: Pin) {
         clickItem(item)
@@ -56,6 +60,7 @@ class CollectActivity : BaseActivity<CollectActivityBinding, CollectViewModel>(
         setAdapter()
         setListeners()
         setPosts()
+        setEmotions()
     }
 
     private fun setAdapter() {
@@ -65,14 +70,15 @@ class CollectActivity : BaseActivity<CollectActivityBinding, CollectViewModel>(
 
     private fun setListeners() {
         binding.collectIbBack.setOnClickListener { finish() }
-        binding.collectIbFilter.setOnClickListener {
-            //todo 필터 구현하기
-            showToast("필터는 현재 구현 중에 있습니다.")
-        }
+        binding.collectIbFilter.setOnClickListener { vm.toggleShowFilterYN() }
     }
 
     private fun setPosts() {
         vm.setPosts()
+    }
+
+    private fun setEmotions() {
+        EmotionDatabaseRepository(application).getAll().observe(this, { vm.setEmotions(it) })
     }
 
     override fun initViewModel() {
@@ -82,6 +88,23 @@ class CollectActivity : BaseActivity<CollectActivityBinding, CollectViewModel>(
             showToast(it)
         }
         vm.toastMsg.observe(this, toastMsgObserver)
+
+        val showFilterYNObserver = Observer<Boolean> {
+            Log.e(TAG, "showFilterYNObserver : $it")
+
+            if (it) {
+                collectBottomSheetDialog.show(supportFragmentManager, "CollectBottomSheetDialog")
+            } else {
+                if (collectBottomSheetDialog.isVisible) {
+                    collectBottomSheetDialog.dismiss()
+                }
+            }
+        }
+        vm.showFilterYN.observe(this, showFilterYNObserver)
+    }
+
+    companion object {
+        private const val TAG = "CollectActivity"
     }
 
 }
