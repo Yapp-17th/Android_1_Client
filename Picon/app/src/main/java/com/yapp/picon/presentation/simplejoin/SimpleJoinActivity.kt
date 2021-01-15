@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import androidx.lifecycle.Observer
 import com.yapp.picon.BR
 import com.yapp.picon.R
@@ -26,6 +27,23 @@ class SimpleJoinActivity : BaseActivity<SimpleJoinActivityBinding, SimpleJoinVie
 
     private fun setListeners() {
         binding.simpleJoinBtnJoin.setOnClickListener { joinMembership() }
+
+        View.OnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus) {
+                if ((view as EditText).text.isNullOrBlank()) {
+                    showTextEssential(view.id)
+                } else {
+                    hideTextEssential(view.id)
+                }
+            }
+        }.let {
+            binding.run {
+                simpleJoinEtId.onFocusChangeListener = it
+                simpleJoinEtPw.onFocusChangeListener = it
+                simpleJoinEtPwRe.onFocusChangeListener = it
+                simpleJoinEtNic.onFocusChangeListener = it
+            }
+        }
     }
 
     private fun joinMembership() {
@@ -45,6 +63,24 @@ class SimpleJoinActivity : BaseActivity<SimpleJoinActivityBinding, SimpleJoinVie
     private fun stopLoading() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         binding.simpleJoinProgressBar.visibility = View.GONE
+    }
+
+    private fun showTextEssential(viewId: Int) {
+        when (viewId) {
+            binding.simpleJoinEtId.id -> vm.showIdIsBlank()
+            binding.simpleJoinEtPw.id -> vm.showPwIsBlank()
+            binding.simpleJoinEtPwRe.id -> vm.showPwReIsBlank()
+            binding.simpleJoinEtNic.id -> vm.showNicIsBlank()
+        }
+    }
+
+    private fun hideTextEssential(viewId: Int) {
+        when (viewId) {
+            binding.simpleJoinEtId.id -> vm.hideIdIsBlank()
+            binding.simpleJoinEtPw.id -> vm.hidePwIsBlank()
+            binding.simpleJoinEtPwRe.id -> vm.hidePwReIsBlank()
+            binding.simpleJoinEtNic.id -> vm.hideNicIsBlank()
+        }
     }
 
     override fun initViewModel() {

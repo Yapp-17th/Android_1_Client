@@ -59,17 +59,23 @@
     <string name="login_is_first">처음이신가요?&#160;</string>
     <string name="login_simple_join">간편가입하기</string>
 
+    <string name="simple_join_title">간편 로그인</string>
     <string name="simple_join_input_id">아이디 입력</string>
     <string name="simple_join_input_pw">비밀번호 입력 (6 – 14자리)</string>
     <string name="simple_join_input_pw_re">비밀번호 재입력</string>
     <string name="simple_join_input_nic">닉네임 입력</string>
+    <string name="simple_join_bottom_text_essential">*필수</string>
+    <string name="simple_join_bottom_id_error">이미 존재하는 아이디입니다</string>
+    <string name="simple_join_bottom_pw_error">6자리 이상으로 설정해주세요</string>
+    <string name="simple_join_bottom_pw_re_error">일치하지 않습니다</string>
+    <string name="simple_join_bottom_nic_error">이미 존재하는 닉네임입니다</string>
 
     <string name="intro_fragment_1_title">추억을 지도 위에</string>
     <string name="intro_fragment_1_sub">여행한 장소에 핀을 추가해서\n나만의 여행지도를 만들어보세요.</string>
     <string name="intro_fragment_2_title">다섯가지 색상 핀</string>
     <string name="intro_fragment_2_sub">색상의 이름을 원하는 감정으로 설정하고\n나만의 지도를 커스텀해보세요!</string>
     <string name="intro_fragment_3_title">PiCON의 100% 활용법</string>
-    <string name="intro_fragment_3_sub">사진을 필터링해서 모아보고\n나만의 여행지도를 공유해보세요.</string>도
+    <string name="intro_fragment_3_sub">사진을 필터링해서 모아보고\n나만의 여행지도를 공유해보세요.</string>
 
     <string name="X">X</string>
     <string name="follow">팔로우</string>
