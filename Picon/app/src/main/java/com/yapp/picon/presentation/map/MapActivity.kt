@@ -4,12 +4,14 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -114,7 +116,7 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
                     dpToPx(this, 60f).toInt(),
                     dpToPx(this, 60f).toInt()
                 )
-                locationLayoutParams.setMargins(0,0,18,0)
+                locationLayoutParams.setMargins(0, 0, 18, 0)
                 locationLayoutParams.endToEnd = R.id.map_constraint_layout
                 locationLayoutParams.topToTop = R.id.map_shared_button
                 locationLayoutParams.bottomToBottom = R.id.map_shared_button
@@ -294,22 +296,24 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
         }
     }
 
-    private fun setCurrentLocation() {
-        LocationHelper(this).requestLocationPermissions()?.let {
-            val cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                LatLng(it.latitude, it.longitude),
-                NaverCamera.DEFAULT_ZOOM
-            )
-                .animate(CameraAnimation.Fly, NaverCamera.DEFAULT_ANIMATION_TIME)
-            naverMap.moveCamera(cameraUpdate)
+    private fun setCurrentLocationMarker(location: Location) {
+        val cameraUpdate = CameraUpdate.scrollAndZoomTo(
+            LatLng(location.latitude, location.longitude),
+            NaverCamera.DEFAULT_ZOOM
+        )
+            .animate(CameraAnimation.Fly, NaverCamera.DEFAULT_ANIMATION_TIME)
+        naverMap.moveCamera(cameraUpdate)
 
-            currentLocationMarker.map = null
-            currentLocationMarker.run {
-                icon = OverlayImage.fromResource(R.drawable.ic_map_now)
-                position = LatLng(it.latitude, it.longitude)
-                this.map = naverMap
-            }
+        currentLocationMarker.map = null
+        currentLocationMarker.run {
+            icon = OverlayImage.fromResource(R.drawable.ic_map_now)
+            position = LatLng(location.latitude, location.longitude)
+            this.map = naverMap
         }
+    }
+
+    private fun setCurrentLocation() {
+        LocationHelper(this).requestLocationPermissions()?.let { setCurrentLocationMarker(it) }
     }
 
     private fun checkStoragePermission() {
@@ -554,6 +558,27 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
         val displayMetrics = context.resources.displayMetrics
 
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics)
+    }
+
+    private fun showRejectLocation() {
+        Toast.makeText(this, "권한이 거절되어 현재 위치 찾기가 불가합니다.", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            RequestCodeSet.LOCATION_REQUEST_CODE.code -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setCurrentLocation()
+                } else {
+                    showRejectLocation()
+                }
+            }
+        }
     }
 
 }
