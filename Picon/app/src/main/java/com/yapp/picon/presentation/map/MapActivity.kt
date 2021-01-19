@@ -175,6 +175,9 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
 
     private fun setSharedButton() {
         binding.mapSharedButton.setOnClickListener {
+            showToast(getString(R.string.update_plan_guide_text))
+            /*
+            //todo share map Image
             vm.setToggleShowBtnYN(false)
             vm.setSharedMenuButton(false)
 
@@ -182,6 +185,7 @@ class MapActivity : BaseMapActivity<MapActivityBinding, MapViewModel>(
             getBitmapFromFile()?.let { imageFile ->
                 shareTheScreenShot(imageFile)
             }
+            */
         }
     }
 
