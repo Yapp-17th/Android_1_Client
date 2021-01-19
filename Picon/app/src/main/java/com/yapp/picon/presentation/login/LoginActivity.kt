@@ -28,6 +28,8 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>(
     private fun setListeners() {
         binding.loginBtnLogin.setOnClickListener { vm.login() }
         binding.loginTvSimpleJoin.setOnClickListener { startSimpleJoinActivity() }
+        binding.loginIbNaver.setOnClickListener { showToast(getString(R.string.update_plan_guide_text)) }
+        binding.loginIbKakao.setOnClickListener { showToast(getString(R.string.update_plan_guide_text)) }
     }
 
     private fun startSimpleJoinActivity() {

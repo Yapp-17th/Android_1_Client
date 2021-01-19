@@ -6,12 +6,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
 class LocationHelper(private val context: Context) {
-    private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    private var location: Location? = null
+    private val locationManager =
+        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     private fun checkPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
@@ -23,19 +22,29 @@ class LocationHelper(private val context: Context) {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun locationPermissionResult(): Location? {
-        if (checkPermission()) {
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            return location
+    private fun getLocation(): Location? {
+        val isGPSEnabled: Boolean = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled: Boolean =
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+        return if (checkPermission()) {
+            when {
+                isNetworkEnabled -> {
+                    locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                }
+                isGPSEnabled -> {
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                }
+                else -> null
+            }
+        } else {
+            null
         }
-        Toast.makeText(context, "권한이 거절되어 현재 위치 찾기가 불가합니다.", Toast.LENGTH_SHORT).show()
-        return null
     }
 
     fun requestLocationPermissions(): Location? {
-        if (checkPermission()) {
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            return location
+        getLocation()?.let {
+            return it
         }
         ActivityCompat.requestPermissions(
             context as Activity,
@@ -44,6 +53,7 @@ class LocationHelper(private val context: Context) {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ), RequestCodeSet.LOCATION_REQUEST_CODE.code
         )
-        return location
+        return null
     }
+
 }

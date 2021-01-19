@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -152,6 +153,25 @@ class MyProfileActivity : BaseActivity<MyProfileActivityBinding, MyProfileViewMo
             .startAlbum()
     }
 
+    private fun changeProfileImage(uri: Uri) {
+        startLoading()
+        vm.setProfileNewImageUri(uri)
+        stopLoading()
+    }
+
+    private fun startLoading() {
+        binding.myProfileProgressBar.visibility = View.VISIBLE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
+    }
+
+    private fun stopLoading() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        binding.myProfileProgressBar.visibility = View.GONE
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -160,7 +180,7 @@ class MyProfileActivity : BaseActivity<MyProfileActivityBinding, MyProfileViewMo
                 if (resultCode == Activity.RESULT_OK) {
                     data?.run {
                         getParcelableArrayListExtra<Uri>(Define.INTENT_PATH)?.let {
-                            vm.setProfileNewImageUri(it[0])
+                            changeProfileImage(it[0])
                         }
                     }
                 }

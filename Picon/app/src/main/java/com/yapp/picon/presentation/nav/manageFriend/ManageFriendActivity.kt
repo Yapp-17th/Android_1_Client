@@ -41,7 +41,8 @@ class ManageFriendActivity : BaseActivity<ManageFriendActivityBinding, ManageFri
         })
         vm.searchText.observe(this, { str ->
             if (str.isEmpty()) {
-                changeToMainFragment()
+//                QA 후 PM 요청으로 기능 제거
+//                changeToMainFragment()
             } else {
                 if (binding.manageFriendSearchDeleteButton.visibility == View.GONE) {
                     changeToSearchFragment()

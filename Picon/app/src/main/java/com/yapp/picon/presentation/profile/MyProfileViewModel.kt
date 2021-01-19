@@ -73,6 +73,7 @@ class MyProfileViewModel(
     fun requestUserInfo() {
         viewModelScope.launch {
             try {
+                //HTTP 504 발생 Gateway Time Out
                 getUserInfoUseCase().memberDetailDto.let {
                     _myProfileTitle.value = it.member.nickName
                     _profileImageUrl.value = it.member.profileImageUrl ?: ""
